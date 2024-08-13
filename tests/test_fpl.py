@@ -7,6 +7,7 @@ from fpl.models.fixture import Fixture
 from fpl.models.gameweek import Gameweek
 from fpl.models.h2h_league import H2HLeague
 from fpl.models.player import Player, PlayerSummary
+from fpl.models.position import Position
 from fpl.models.team import Team
 from fpl.models.user import User
 from tests.helper import AsyncMock
@@ -143,6 +144,31 @@ class TestFPL:
         players = await fpl.get_players([1, 2, 3], True)
         assert len(players) == 3
         assert isinstance(players[0].fixtures, list)
+
+    @pytest.mark.asyncio
+    async def test_position(self, fpl):
+        # test invalid ID
+        with pytest.raises(ValueError):
+            await fpl.get_position(-1)
+
+        position = await fpl.get_position(1)
+        assert isinstance(position, Position)
+
+        position = await fpl.get_position(1, return_json=True)
+        assert isinstance(position, dict)
+
+    @pytest.mark.asyncio
+    async def test_positions(self, fpl):
+        positions = await fpl.get_positions()
+        assert isinstance(positions, list)
+        assert isinstance(positions[0], Position)
+
+        positions = await fpl.get_positions(return_json=True)
+        assert isinstance(positions, list)
+        assert isinstance(positions[0], dict)
+
+        positions = await fpl.get_positions([1, 2, 3])
+        assert len(positions) == 3
 
     @pytest.mark.asyncio
     async def test_fixture(self, fpl):

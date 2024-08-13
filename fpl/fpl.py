@@ -323,7 +323,7 @@ class FPL:
 
         try:
             position = next(position for position in positions.values()
-                          if position["id"] == position)
+                          if position["id"] == position_id)
         except StopIteration:
             raise ValueError(f"Position with ID {position_id} not found")
 
@@ -354,7 +354,7 @@ class FPL:
             positions = list(positions.values())
 
         if not return_json:
-            positions = [Position(positions) for position in positions]
+            positions = [Position(position) for position in positions]
 
         return positions
 

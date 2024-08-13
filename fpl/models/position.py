@@ -1,8 +1,8 @@
-class Postion():
+class Position():
     """A class representing a player's position in Fantasy Premier League."""
 
-    def __init__(self, player_information):
-        for k, v in player_information.items():
+    def __init__(self, position_information):
+        for k, v in position_information.items():
             setattr(self, k, v)
 
     def __str__(self):
