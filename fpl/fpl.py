@@ -35,6 +35,7 @@ from .models.fixture import Fixture
 from .models.gameweek import Gameweek
 from .models.h2h_league import H2HLeague
 from .models.player import Player, PlayerSummary
+from .models.position import Position
 from .models.team import Team
 from .models.user import User
 from .utils import (average, fetch, get_current_user, logged_in,
@@ -303,6 +304,60 @@ class FPL:
         players = await asyncio.gather(*tasks)
 
         return players
+    
+    async def get_position(self, position_id, return_json=False):
+        """Returns the position with the given ``position_id``.
+
+        Information is taken from e.g.:
+            https://fantasy.premierleague.com/api/bootstrap-static/
+
+        :param position_id: A position ID.
+        :param list players: (optional) A list of players.
+        :param return_json: (optional) Boolean. If ``True`` returns a ``dict``,
+            if ``False`` returns a :class:`Player` object. Defaults to
+            ``False``.
+        :rtype: :class:`Player` or ``dict``
+        :raises ValueError: Player with ``position_id`` not found
+        """
+        positions = getattr(self, "element_types")
+
+        try:
+            position = next(position for position in positions.values()
+                          if position["id"] == position)
+        except StopIteration:
+            raise ValueError(f"Position with ID {position_id} not found")
+
+        if return_json:
+            return position
+
+        return Position(position)
+
+    async def get_positions(self, position_ids=None, return_json=False):
+        """Returns either a list of *all* positions, or a list of positions 
+        whose IDs are in the given ``position_ids`` list.
+
+        Information is taken from e.g.:
+            https://fantasy.premierleague.com/api/bootstrap-static/
+
+        :param list position_ids: (optional) A list of position IDs
+        :param return_json: (optional) Boolean. If ``True`` returns a list of
+            ``dict``s, if ``False`` returns a list of  :class:`Player`
+            objects. Defaults to ``False``.
+        :type return_json: bool
+        :rtype: list
+        """
+        positions = getattr(self, "element_types")
+
+        if position_ids:
+            positions = [position for position in list(positions.values()) if position["id"] in position_ids]
+        else:
+            positions = list(positions.values())
+
+        if not return_json:
+            positions = [Position(positions) for position in positions]
+
+        return positions
+
 
     async def get_fixture(self, fixture_id, return_json=False):
         """Returns the fixture with the given ``fixture_id``.
