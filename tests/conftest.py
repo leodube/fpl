@@ -4,13 +4,14 @@ import pytest_asyncio
 import os
 
 from fpl import FPL
-from fpl.models import Fixture, H2HLeague, User, ClassicLeague, Team, Gameweek
+from fpl.models import Fixture, H2HLeague, User, ClassicLeague, Team, Gameweek, Position
 from tests.test_classic_league import classic_league_data
 from tests.test_fixture import fixture_data
 from tests.test_h2h_league import h2h_league_data
 from tests.test_team import team_data
 from tests.test_user import user_data
 from tests.test_gameweek import gameweek_data
+from tests.test_position import position_data
 
 try:
     from.temp_env_var import TEMP_ENV_VARS, ENV_VARS_TO_SUSPEND
@@ -54,6 +55,11 @@ async def gameweek():
 @pytest_asyncio.fixture()
 async def player(fpl):
     yield await fpl.get_player(345, include_summary=True)
+
+
+@pytest_asyncio.fixture()
+async def position():
+    return Position(position_data)
 
 
 @pytest.fixture()
