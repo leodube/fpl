@@ -506,10 +506,16 @@ class FPL:
         except StopIteration:
             raise ValueError(f"Gameweek with ID {gameweek_id} not found")
 
-        if include_live:
-            live_gameweek = await fetch(
-                self.session, API_URLS["gameweek_live"].format(gameweek_id))
-
+        if (
+            include_live
+            and (
+                live_gameweek := await fetch(
+                    self.session, API_URLS["gameweek_live"].format(gameweek_id)
+                )
+            )
+            # When game is being updated live_gameweek is a str type
+            and isinstance(live_gameweek, list)
+        ):
             # Convert element list to dict
             live_gameweek["elements"] = {
                 element["id"]: element for element in live_gameweek["elements"]}
