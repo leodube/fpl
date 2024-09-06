@@ -12,7 +12,8 @@ def add_player(location, information):
 class Fixture:
     """A class representing a fixture in Fantasy Premier League."""
 
-    def __init__(self, fixture_information):
+    def __init__(self, fixture_information, teams_json=None):
+        self._teams_json = teams_json
         for k, v in fixture_information.items():
             if k == "stats":
                 v = {w["identifier"]: {"a": w["a"], "h": w["h"]} for w in v}
@@ -168,6 +169,6 @@ class Fixture:
             return {"a": [], "h": []}
 
     def __str__(self):
-        return (f"{team_converter(self.team_h)} vs. "
-                f"{team_converter(self.team_a)} - "
+        return (f"{team_converter(self.team_h, self._teams_json)} vs. "
+                f"{team_converter(self.team_a, self._teams_json)} - "
                 f"{date_formatter(self.kickoff_time)}")

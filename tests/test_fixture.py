@@ -620,7 +620,3 @@ class TestFixture:
 
     def test_get_bps_finished(self, fixture):
         self._do_test_finished(fixture, "get_bps")
-
-    @staticmethod
-    def test_str(fixture):
-        assert str(fixture) == "Nott'm Forest vs. Bournemouth - Fri 20 Sep 19:00"

@@ -261,7 +261,8 @@ class FPL:
         if return_json:
             return player
 
-        return Player(player, self.session)
+        teams_json = await self.get_teams(return_json=True)
+        return Player(player, self.session, teams_json)
 
     async def get_players(self, player_ids=None, include_summary=False,
                           return_json=False):
@@ -397,7 +398,8 @@ class FPL:
         if return_json:
             return fixture
 
-        return Fixture(fixture)
+        teams_json = await self.get_teams(return_json=True)
+        return Fixture(fixture, teams_json)
 
     async def get_fixtures_by_id(self, fixture_ids, return_json=False):
         """Returns a list of all fixtures with IDs included in the
@@ -434,7 +436,8 @@ class FPL:
         if return_json:
             return fixtures
 
-        return [Fixture(fixture) for fixture in fixtures]
+        teams_json = await self.get_teams(return_json=True)
+        return [Fixture(fixture, teams_json) for fixture in fixtures]
 
     async def get_fixtures_by_gameweek(self, gameweek, return_json=False):
         """Returns a list of all fixtures of the given ``gameweek``.
@@ -457,7 +460,8 @@ class FPL:
         if return_json:
             return fixtures
 
-        return [Fixture(fixture) for fixture in fixtures]
+        teams_json = await self.get_teams(return_json=True)
+        return [Fixture(fixture, teams_json) for fixture in fixtures]
 
     async def get_fixtures(self, return_json=False):
         """Returns a list of *all* fixtures.
@@ -477,7 +481,8 @@ class FPL:
         if return_json:
             return fixtures
 
-        return [Fixture(fixture) for fixture in fixtures]
+        teams_json = await self.get_teams(return_json=True)
+        return [Fixture(fixture, teams_json) for fixture in fixtures]
 
     async def get_gameweek(self, gameweek_id, include_live=False,
                            return_json=False):
@@ -717,7 +722,10 @@ class FPL:
                     continue
 
                 points = fixture["total_points"]
-                opponent = team_converter(fixture["opponent_team"])
+                opponent = team_converter(
+                    fixture["opponent_team"],
+                    await self.get_teams(return_json=True)
+                )
                 location = "H" if fixture["was_home"] else "A"
 
                 points_against.setdefault(
