@@ -13,8 +13,9 @@ class TestUtils:
     @pytest.mark.asyncio
     async def test_team_converter(self, fpl):
         teams = await fpl.get_teams()
+        teams_json = await fpl.get_teams(return_json=True)
         for team in teams:
-            assert team_converter(team.id) == team.name
+            assert team_converter(team.id, teams_json) == team.name
 
     @staticmethod
     def test_position_converter():

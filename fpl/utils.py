@@ -83,60 +83,26 @@ async def get_current_gameweek(session):
     return current_gameweek["id"]
 
 
-def team_converter(team_id):
+def team_converter(team_id, teams):
     """Converts a team's ID to their actual name."""
-    team_map = {
-        1: "Arsenal",
-        2: "Aston Villa",
-        3: "Bournemouth",
-        4: "Brentford",
-        5: "Brighton",
-        6: "Burnley",
-        7: "Chelsea",
-        8: "Crystal Palace",
-        9: "Everton",
-        10: "Fulham",
-        11: "Liverpool",
-        12: "Luton",
-        13: "Man City",
-        14: "Man Utd",
-        15: "Newcastle",
-        16: "Nott'm Forest",
-        17: "Sheffield United",
-        18: "Spurs",
-        19: "West Ham",
-        20: "Wolves",
-        None: None
-    }
+    if not teams:
+        return "[Unknown]"
+
+    team_map = {}
+    for team in teams:
+        team_map[team["id"]] = team["name"]
     return team_map[team_id]
 
 
-def short_name_converter(team_id):
+def short_name_converter(team_id, teams):
     """Converts a team's ID to their short name."""
-    short_name_map = {
-        1: "ARS",
-        2: "AVL",
-        3: "BOU",
-        4: "BRE",
-        5: "BHA",
-        6: "BUR",
-        7: "CHE",
-        8: "CRY",
-        9: "EVE",
-        10: "FUL",
-        11: "LIV",
-        12: "LUT",
-        13: "MCI",
-        14: "MUN",
-        15: "NEW",
-        16: "NFO",
-        17: "SHU",
-        18: "TOT",
-        19: "WHU",
-        20: "WOL",
-        None: None
-    }
-    return short_name_map[team_id]
+    if not teams:
+        return "[Unknown]"
+
+    team_map = {}
+    for team in teams:
+        team_map[team["id"]] = team["short_name"]
+    return team_map[team_id]
 
 
 def position_converter(position):

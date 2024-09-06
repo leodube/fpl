@@ -5,8 +5,9 @@ from ..utils import fetch, position_converter, team_converter
 class Player():
     """A class representing a player in Fantasy Premier League."""
 
-    def __init__(self, player_information, session):
+    def __init__(self, player_information, session, teams_json=None):
         self._session = session
+        self._teams_json = teams_json
         for k, v in player_information.items():
             setattr(self, k, v)
 
@@ -55,7 +56,7 @@ class Player():
     def __str__(self):
         return (f"{self.web_name} - "
                 f"{position_converter(self.element_type)} - "
-                f"{team_converter(self.team)}")
+                f"{team_converter(self.team, self._teams_json)}")
 
 
 class PlayerSummary:
